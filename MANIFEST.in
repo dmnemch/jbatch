@@ -1,2 +1,0 @@
-include config/jb_config.yaml
-include src/cp_config.sh

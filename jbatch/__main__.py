@@ -87,7 +87,7 @@ def main():
     if params["verbosity"] > 0 : print(job_id)
   else:
     print("\033[33mUsing dry mode! No commands are submited to slurm!\033[0m")
-    if params["verbosity"] < 2: print("To print params sbatch command, set --verbosity to 2")
+    if params["verbosity"] < 2: print("To print params and sbatch command, set --verbosity to 2")
 
 if __name__ == "__main__":
     main()
