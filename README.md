@@ -11,21 +11,23 @@ pip install jbatch
 ```
 
 ## Arguments
-| Description                                                                                                 | Argument                      |
-| ----------------------------------------------------------------------------------------------------------- | ----------------------------- |
-| Account to charge for resource usage                                                                        | `--account`,<br>`-a`          |
-| Reservation name                                                                                            | `--reservation`,<br>`-r`      |
-| Partition to submit the job to                                                                              | `--partition`,<br>`-p`        |
-| Number of CPUs to use (e.g. 4)                                                                              | `--cpus`,<br>`-c`             |
-| Memory in GB without 'G' suffix (e.g. 8)                                                                    | `--mem`,<br>`-m`              |
-| Time in hours (e.g. 24)                                                                                     | `--time`,<br>`-t`             |
-| Activate conda environment by name or path. Conda executable must be in the $PATH                           | `--conda`                     |
-| Destination directory for .out and .err files                                                               | `--logdir`                    |
-| Base name for .out and .err files                                                                           | `--name`                      |
-| Path to jb_config.yaml file. If no config given, trying to find one in the current dir and in ~/.config/jb  | `--config`                    |
-| Verbosity level: 0 - quiet, 1 - Job ID, 2 - params and cmd                                                  | `--verbosity`,<br>`-v`        |
-| Simulate job submission without executing commands                                                          | `--dry`                       |
-| Job dependencies                                                                                            | `--dependency`,<br>`-d`       |
+## Arguments
+| Argument                    | Description                          |
+| ----------------------------| ----------------------------------------------- |
+| `--account`,<br>`-a`          | Account to charge for resource usage                                                                        |
+| `--reservation`,<br>`-r`      | Reservation name                                                                                            |
+| `--partition`,<br>`-p`        | Partition to submit the job to                                                                              |
+| `--cpus`,<br>`-c`             | Number of CPUs to use (e.g. 4)                                                                              |
+| `--mem`,<br>`-m`              | Memory in GB without 'G' suffix (e.g. 8)                                                                    |
+| `--time`,<br>`-t`             | Time in hours (e.g. 24)                                                                                     |
+| `--conda`                     | Activate conda environment by name or path,<br>Conda executable must be in the $PATH                        |
+| `--logdir`                    | Destination directory for .out and .err files                                                               |
+| `--name`                      | Base name for .out and .err files                                                                           |
+| `--config`                    | Path to jb_config.yaml file. If no config given,<br>trying to find one in the current dir and in ~/.config/jb  |
+| `--verbosity`,<br>`-v`        | Verbosity level: 0 - quiet, 1 - Job ID, 2 - params and cmd                                                  |
+| `--dry`                       | Dry run – simulate job submission without executing commands                                                |
+| `--dependency`,<br>`-d`       | Job dependencies                                                                                            |
+
 
 ## Config
 Config data in `yaml` fromat may be located in:
