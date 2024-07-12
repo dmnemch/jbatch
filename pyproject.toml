@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "jbatch"
-version = "0.1.0"
+version = "0.1.1"
 description = "Simple tool to wrap and execute sbatch commands from Jupyter Notebook cells with Conda envs"
 authors = ["Dmitry Solovey <dsolovey@ist.ac.at>"]
 license = "MIT"
