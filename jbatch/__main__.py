@@ -6,7 +6,7 @@ import os.path
 from pathlib import Path
 import yaml
 
-def parse_args():
+def get_parser():
   parser = argparse.ArgumentParser(
     prog='jb',
     description="\033[35;1m Simple tool to wrap and execute sbatch commands from Jupyter Notebook cells with conda envs \033[0m")
@@ -24,7 +24,7 @@ def parse_args():
   parser.add_argument("--dry", action="store_true", help="Simulate job submission without executing commands")
   parser.add_argument("-d", "--dependency", metavar="", help="Job dependencies")
   parser.add_argument("cmd", nargs=argparse.REMAINDER, metavar="", help="Command to wrap into sbatch script")
-  return parser.parse_args()
+  return parser
 
 def generate_config(config_path):
   default_config = {'account': '', 'partition': '', 'reservation': '', 'cpus': 4, 'mem': 4, 'time': 24, 'prefix': '', 'conda_prefix': 'conda activate', 'logdir': '.', 'name': '%j', 'verbosity': 1}
@@ -60,30 +60,33 @@ def generate_params(params):
   params["reservation"] = f'--reservation={params["reservation"]}' if params["reservation"] else ""
   return params
 
-def run_cmd(cmd):
+def run_cmd(cmd, parser):
   try:
     result = subprocess.run(cmd, shell=True, check=True, capture_output=True, text=True)
     return result
   except subprocess.CalledProcessError as e:
-    print(f"Sbatch execution failed with error:\n{e.stderr}")
-
+    parser.print_usage()
+    print(f"\033[31mSbatch execution failed with error:\033[0m\n{e.stderr}")
+    
 def main():
-  args = parse_args()
+  parser = get_parser()
+  args = parser.parse_args()
   params = generate_params(vars(args))
   if not params["cmd"]:
-    raise ValueError("\033[31;1m No command are submited to slurm!\033[0m")
+    parser.print_usage()
+    raise ValueError("\033[31m Empty command given! Void can't be submited to slurm! \033[0m")
   if params["verbosity"] > 1:
-    print("\033[33;1mParams: \033[0m")
+    print("\033[33mParams: \033[0m")
     for k,v in params.items():
       print("", k, v, sep="\t")
-  cmd = f'''sbatch --account {params["account"]} --partition {params["partition"]} \
+  cmd2wrap = f'''sbatch --account {params["account"]} --partition {params["partition"]} \
 {params["reservation"]} {params["dependency"]} \
 -o '{params["logdir"]}/{params['name']}.out' -e '{params["logdir"]}/{params["name"]}.err' \
 -c {params["cpus"]} --mem={params["mem"]}G --time={params["time"]}:00:00 \
 --parsable --wrap "/bin/bash -c '{params["prefix"]}{params["conda"]}{params["cmd"]}'"'''
-  if params["verbosity"] > 1: print("\033[33;1mCommand: \033[0m", cmd, sep="\n")
+  if params["verbosity"] > 1: print("\033[33mCommand: \033[0m", cmd2wrap, sep="\n")
   if not params["dry"]:
-    job_id = run_cmd(cmd).stdout.strip()
+    job_id = run_cmd(cmd2wrap, parser).stdout.strip()
     if params["verbosity"] > 0 : print(job_id)
   else:
     print("\033[33mUsing dry mode! No commands are submited to slurm!\033[0m")
