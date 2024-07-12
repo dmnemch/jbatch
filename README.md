@@ -62,7 +62,7 @@ path = "~/data/sample1.sam"
 ```
 
 #### ⚠️ Example №3: Using pipes and redirections
-*Tip*: To use special bash symbols like "|", ">" or "&" use escape symbol "\\"
+*Tip*: To use special bash characters like (i.e. "|", ">" or "&") use escape characters "\\"
 ```python
 ! jb echo "hi!" \> test123 \&\& sleep 5
 ```
@@ -76,13 +76,14 @@ job_ids.append(job_id)
 job_id = ! jb echo "World" \>\> "hi.txt"
 job_ids.append(job_id)
 
+# convert list of lists into comma-separated job ids string 
 job_ids = ",".join([_ for __ in job_ids for _ in __])
 
 ! jb -d {job_ids} cat "hi.txt"
 ```
 
 ## Future features (maybe...)
- - 🪵 Profile executes comands for resource usage (cpus, memory, disc i/o, time)
- - 🏛️ History of used commands
+ - ⏱️ Profile submitted jobs for resource usage (cpus, memory, disc i/o, time)
+ - 🏛️ History of submitted jobs
  - ✨ Fancy dependencies
  - ➕ Extra arguments for sbatch
