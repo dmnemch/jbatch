@@ -20,7 +20,7 @@ def get_parser():
   parser.add_argument("--logdir", metavar="", help="Destination directory for .out and .err files")
   parser.add_argument("--name", metavar="", help="Base name for .out and .err files")
   parser.add_argument("--config", metavar="", help="Path to jb_config.yaml file")
-  parser.add_argument("-v", "--verbosity", type=int, metavar="", help="Verbosity level: 0 - quiet, 1 - Job ID, 2 - params and cmd")
+  parser.add_argument("-v", "--verbosity", default=1, type=int, metavar="", help="Verbosity level: 0 - quiet, 1 - Job ID, 2 - params and cmd")
   parser.add_argument("--dry", action="store_true", help="Simulate job submission without executing commands")
   parser.add_argument("-d", "--dependency", metavar="", help="Job dependencies")
   parser.add_argument("cmd", nargs=argparse.REMAINDER, metavar="", help="Command to wrap into sbatch script")
@@ -45,19 +45,22 @@ def generate_params(params):
     else:
       config_path = f"{os.path.expanduser('~')}/.config/jb/jb_config.yaml"
       generate_config(config_path)
-      print(f"\033[32mNo config file is found! Generated default config in {config_path}, \033[31mbut it lacks crucial argument (e.g. partition) – please add them manualy \033[0m")
+      print(f"\033[32mNo config file is found! Generated default config in {config_path}, \033[31mbut it lacks crucial arguments (e.g. partition) – please add them manualy \033[0m")
   if params["config"]:
     try:
       config = yaml.safe_load(Path(params["config"]).read_text())
     except:
-      raise ValueError("Config file given but loading wasn't sucsessful: check format!")
+      raise ValueError("\033[31m Config file given but loading wasn't sucsessful: check existence and format! \033[0m")
     for k,v in config.items():
       if k not in params or not params[k]: params[k] = v
   params["cmd"] = " ".join(params["cmd"])
-  params["prefix"] = params["prefix"] + " && " if params["prefix"] else "" 
-  params["conda"] = params["conda_prefix"] + " " + params["conda"] + " && " if params["conda"] else "" 
+  params["prefix"] = params["prefix"] + " && " if "prefix" in params.keys() and params["prefix"] else "" 
+  params["conda"] = params["conda_prefix"] + " " + params["conda"] + " && " if "conda" in params.keys() and params["conda"] else "" 
   params["dependency"] = f'--dependency=afterok:{params["dependency"]}' if params["dependency"] else ""
   params["reservation"] = f'--reservation={params["reservation"]}' if params["reservation"] else ""
+  params["account"] = f'--account {params["account"]}' if params["account"] else ""
+  params["partition"] = f'--partition {params["partition"]}' if params["partition"] else ""
+
   return params
 
 def run_cmd(cmd, parser):
@@ -79,8 +82,7 @@ def main():
     print("\033[33mParams: \033[0m")
     for k,v in params.items():
       print("", k, v, sep="\t")
-  cmd2wrap = f'''sbatch --account {params["account"]} --partition {params["partition"]} \
-{params["reservation"]} {params["dependency"]} \
+  cmd2wrap = f'''sbatch {params["account"]} {params["partition"]} {params["reservation"]} {params["dependency"]} \
 -o '{params["logdir"]}/{params['name']}.out' -e '{params["logdir"]}/{params["name"]}.err' \
 -c {params["cpus"]} --mem={params["mem"]}G --time={params["time"]}:00:00 \
 --parsable --wrap "/bin/bash -c '{params["prefix"]}{params["conda"]}{params["cmd"]}'"'''
