@@ -70,7 +70,7 @@ def run_cmd(cmd, parser):
   except subprocess.CalledProcessError as e:
     parser.print_usage()
     print(f"\033[31mSbatch execution failed with error:\033[0m\n{e.stderr}")
-    
+
 def main():
   parser = get_parser()
   args = parser.parse_args()
@@ -78,6 +78,8 @@ def main():
   if not params["cmd"]:
     parser.print_usage()
     raise ValueError("\033[31m Empty command given! Void can't be submited to slurm! \033[0m")
+  elif params["cmd"] == "err":
+    err
   if params["verbosity"] > 1:
     print("\033[33mParams: \033[0m")
     for k,v in params.items():

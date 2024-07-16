@@ -11,7 +11,6 @@ pip install jbatch
 ```
 
 ## Arguments
-## Arguments
 | Argument                    | Description                          |
 | ----------------------------| ----------------------------------------------- |
 | `--account`,<br>`-a`          | Account to charge for resource usage                                                                        |
@@ -82,8 +81,20 @@ job_ids = ",".join([_ for __ in job_ids for _ in __])
 ! jb -d {job_ids} cat "hi.txt"
 ```
 
+Also you can just ignore output:
+```
+_ = ! jb echo "hi!"
+! jb echo "hi!" > /dev/null
+
+```
+
+## Extra
+Use `err` and `out` commands to `cat` last created files in the `log` dir
+
 ## Future features (maybe...)
  - ⏱️ Profile submitted jobs for resource usage (cpus, memory, disc i/o, time)
  - 🏛️ History of submitted jobs
  - ✨ Fancy dependencies
  - ➕ Extra arguments for sbatch
+
+
