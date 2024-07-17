@@ -18,7 +18,7 @@ def get_parser():
   parser.add_argument("-t", "--time", type=int, metavar="", help="Time in hours")
   parser.add_argument("--conda", metavar="", help="Activate conda environment by name or path")
   parser.add_argument("--logdir", metavar="", help="Destination directory for .out and .err files")
-  parser.add_argument("--name", metavar="", help="Base name for .out and .err files")
+  parser.add_argument("--name", metavar="", help="Base name for log (.out & .err) files and for the sbatch job, use %cmd for first word in cmd and %j for job id")
   parser.add_argument("--config", metavar="", help="Path to jb_config.yaml file")
   parser.add_argument("-v", "--verbosity", default=1, type=int, metavar="", help="Verbosity level: 0 - quiet, 1 - Job ID, 2 - params and cmd")
   parser.add_argument("--dry", action="store_true", help="Simulate job submission without executing commands")
@@ -78,14 +78,14 @@ def main():
   if not params["cmd"]:
     parser.print_usage()
     raise ValueError("\033[31m Empty command given! Void can't be submited to slurm! \033[0m")
-  elif params["cmd"] == "err":
-    err
   if params["verbosity"] > 1:
     print("\033[33mParams: \033[0m")
     for k,v in params.items():
       print("", k, v, sep="\t")
+  if "%cmd" in params["name"]:
+   params["name"] = params["cmd"].split()[0].join(params["name"].split("%cmd"))
   cmd2wrap = f'''sbatch {params["account"]} {params["partition"]} {params["reservation"]} {params["dependency"]} \
--o '{params["logdir"]}/{params['name']}.out' -e '{params["logdir"]}/{params["name"]}.err' \
+-o '{params["logdir"]}/{params['name']}.out' -e '{params["logdir"]}/{params["name"]}.err' --job-name={params["name"]} \
 -c {params["cpus"]} --mem={params["mem"]}G --time={params["time"]}:00:00 \
 --parsable --wrap "/bin/bash -c '{params["prefix"]}{params["conda"]}{params["cmd"]}'"'''
   if params["verbosity"] > 1: print("\033[33mCommand: \033[0m", cmd2wrap, sep="\n")

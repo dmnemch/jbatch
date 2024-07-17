@@ -15,5 +15,14 @@ def err():
 def out():
   run_bash_script("out")
 
+def sc():
+  run_bash_script("sc")
+
+def sa():
+  run_bash_script("sa")
+
+def sq():
+  run_bash_script("sq")
+
 if __name__ == "__main__":
   err()

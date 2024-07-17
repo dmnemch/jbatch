@@ -21,7 +21,7 @@ pip install jbatch
 | `--time`,<br>`-t`             | Time in hours (e.g. 24)                                                                                     |
 | `--conda`                     | Activate conda environment by name or path,<br>Conda executable must be in the $PATH                        |
 | `--logdir`                    | Destination directory for .out and .err files                                                               |
-| `--name`                      | Base name for .out and .err files                                                                           |
+| `--name`                      | Base name for log (.out & .err) files and for the sbatch job, use %cmd for first word in cmd and %j for job id  |
 | `--config`                    | Path to jb_config.yaml file. If no config given,<br>trying to find one in the current dir and in ~/.config/jb  |
 | `--verbosity`,<br>`-v`        | Verbosity level: 0 - quiet, 1 - Job ID, 2 - params and cmd                                                  |
 | `--dry`                       | Dry run – simulate job submission without executing commands                                                |
