@@ -85,11 +85,11 @@ Also you can just ignore output:
 ```
 _ = ! jb echo "hi!"
 ! jb echo "hi!" > /dev/null
-
 ```
 
 ## Extra
-Use `err` and `out` commands to `cat` last created files in the `log` dir
+Use `err` and `out` commands to `cat` last created files in the `log` dir.
+Use `sc`, `sa`, `sq` for better `scancel` (warning! adds `--me` flag), `sacct` and `squeque`
 
 ## Future features (maybe...)
  - ⏱️ Profile submitted jobs for resource usage (cpus, memory, disc i/o, time)
