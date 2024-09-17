@@ -7,24 +7,26 @@ from pathlib import Path
 import yaml
 
 def get_parser():
-  parser = argparse.ArgumentParser(
-    prog='jb',
-    description="\033[35;1m Simple tool to wrap and execute sbatch commands from Jupyter Notebook cells with conda envs \033[0m")
-  parser.add_argument("-a", "--account", metavar="", help="Account to charge for resource usage :)")
-  parser.add_argument("-r", "--reservation", metavar="", help="Reservation name")
-  parser.add_argument("-p", "--partition", metavar="", help="Partition to submit job to")
-  parser.add_argument("-c", "--cpus", type=int, metavar="", help="Number of CPUs to use")
-  parser.add_argument("-m", "--mem", type=int, metavar="", help="Memory in GB (without 'G' suffix)")
-  parser.add_argument("-t", "--time", type=int, metavar="", help="Time in hours")
-  parser.add_argument("--conda", metavar="", help="Activate conda environment by name or path")
-  parser.add_argument("--logdir", metavar="", help="Destination directory for .out and .err files")
-  parser.add_argument("--name", metavar="", help="Base name for log (.out & .err) files and for the sbatch job, use %cmd for first word in cmd and %j for job id")
-  parser.add_argument("--config", metavar="", help="Path to jb_config.yaml file")
-  parser.add_argument("-v", "--verbosity", default=1, type=int, metavar="", help="Verbosity level: 0 - quiet, 1 - Job ID, 2 - params and cmd")
-  parser.add_argument("--dry", action="store_true", help="Simulate job submission without executing commands")
-  parser.add_argument("-d", "--dependency", metavar="", help="Job dependencies")
-  parser.add_argument("cmd", nargs=argparse.REMAINDER, metavar="", help="Command to wrap into sbatch script")
-  return parser
+    parser = argparse.ArgumentParser(
+        prog='jb',
+        description="Simple tool to wrap and execute sbatch commands from Jupyter Notebook cells with conda envs"
+    )
+    parser.add_argument("-a", "--account", metavar="<account>", help="Account to charge for resource usage")
+    parser.add_argument("-r", "--reservation", metavar="<reservation>", help="Reservation name")
+    parser.add_argument("-p", "--partition", metavar="<partition>", help="Partition to submit job to")
+    parser.add_argument("-c", "--cpus", type=int, metavar="<cpus>", help="Number of CPUs to use")
+    parser.add_argument("-m", "--mem", type=int, metavar="<memory>", help="Memory in GB (without 'G' suffix)")
+    parser.add_argument("-t", "--time", type=int, metavar="<time>", help="Time in hours")
+    parser.add_argument("--conda", metavar="<conda>", help="Activate conda environment by name or path")
+    parser.add_argument("--logdir", metavar="<logdir>", help="Destination directory for .out and .err files")
+    parser.add_argument("--name", metavar="<name>", help="Base name for log (.out & .err) files and for the sbatch job, use %cmd for first word in cmd and %j for job id")
+    parser.add_argument("--config", metavar="<config>", help="Path to jb_config.yaml file")
+    parser.add_argument("-v", "--verbosity", default=1, type=int, metavar="<verbosity>", help="Verbosity level: 0 - quiet, 1 - Job ID, 2 - params and cmd")
+    parser.add_argument("--dry", action="store_true", help="Simulate job submission without executing commands")
+    parser.add_argument("-d", "--dependency", metavar="<dependency>", help="Job dependencies")
+    parser.add_argument("cmd", nargs=argparse.REMAINDER, metavar="<cmd>", help="Command to wrap into sbatch script")
+    return parser
+
 
 def generate_config(config_path):
   default_config = {'account': '', 'partition': '', 'reservation': '', 'cpus': 4, 'mem': 4, 'time': 24, 'prefix': '', 'conda_prefix': 'conda activate', 'logdir': '.', 'name': '%j', 'verbosity': 1}
@@ -94,7 +96,6 @@ def main():
     if params["verbosity"] > 0 : print(job_id)
   else:
     print("\033[33mUsing dry mode! No commands are submited to slurm!\033[0m")
-    if params["verbosity"] < 2: print("To print params and sbatch command, set --verbosity to 2")
 
 if __name__ == "__main__":
     main()
