@@ -19,7 +19,7 @@ def get_parser():
     parser.add_argument("-t", "--time", type=int, metavar="<time>", help="Time in hours")
     parser.add_argument("--conda", metavar="<conda>", help="Activate conda environment by name or path")
     parser.add_argument("--logdir", metavar="<logdir>", help="Destination directory for .out and .err files")
-    parser.add_argument("--name", metavar="<name>", help="Base name for log (.out & .err) files and for the sbatch job, use %cmd for first word in cmd and %j for job id")
+    parser.add_argument("--name", metavar="<name>", help="Base name for log (.out & .err) files and for the sbatch job")
     parser.add_argument("--config", metavar="<config>", help="Path to jb_config.yaml file")
     parser.add_argument("-v", "--verbosity", default=1, type=int, metavar="<verbosity>", help="Verbosity level: 0 - quiet, 1 - Job ID, 2 - params and cmd")
     parser.add_argument("--dry", action="store_true", help="Simulate job submission without executing commands")
